@@ -16,10 +16,20 @@ from nbdev.showdoc import *
 ```
 
 # Project Pilot - Binary classification of chest X-rays for 'swallowed coin'
-## Adapted from fastai tutorial https://docs.fast.ai/tutorial.medical_imaging.html
+#### Adapted from fastai tutorial https://docs.fast.ai/tutorial.medical_imaging.html
 
 
 > In this notebook we will build a classifier that distinguishes between chest X-rays with a swallowed coin and chest X-rays without a swallowed coin. The coin in these images is always seen face-on, and has not been rotated. The image data is loaded from a local dataset of modified DICOM source files, which have been derived from a dataset of 250 chest X-rays that are included in the fastai package. DICOM data is handled directly. This notebook also goes through basic data exploration.
+
+## Foreign body impacted in trachea
+
+Sometimes patients will accidentally inhale a foreign body. These can include things like (commonly) coins, nuts, a food bolus, debris, or even their own dentures. Most objects will be lodged in the trachea (windpipe) on the way down. Coins are more common in children than adults. Any foreign body in the airway can be an emergency, as even if it doesn't obstruct, it can cause trauma and bleeding, which may then subsequently result in obstruction.
+
+have chosen to make a classifier on swallowed coins as Part I of my project because a coin is a simple shape, and I am using an 'artificial' or 'synthetic' dataset where I am adding in the coins with openCV (see my other notebook 'Create_modified_dataset' to see how I modify the pixels in the DICOM files via numpy).
+
+Here is what a coin in the trachea looks like on Chest X-ray (this is a real image, and I have not modified it).
+
+![real coin in trachea](./images/coin_trachea.jpg)
 
 ## Loading of X-ray DICOM files
 
@@ -30,9 +40,7 @@ First, we will define a path to the _siim_small_ folder containing a subset (250
 pneumothorax_source =  Path('mod_dataset/siim_small')
 ```
 
-The _siim_small_ folder has the following directory/file structure, which was appropriate for the tutorial goal, which was the classification of chest X-rays by pneumonthorax presence. I have kept the folder structure the same to preserve that information, but I have used my own labels which are drawn from a dataframe.
-
-![siim_folder_structure.jpg](../images/siim_folder_structure.jpeg)
+The _siim_small_ folder has a specific directory/file structure with folders like 'pneumothoarax' and 'no pneumothorax', which was appropriate for the tutorial goal, which was the classification of chest X-rays by pneumonthorax presence. I have kept the folder structure the same to preserve that information, but I have used my own labels which are drawn from a dataframe. That's why the term pneumothorax keeps popping up - because I'm adapating from that dataset.
 
 ### Plotting the DICOM data
 
@@ -452,7 +460,7 @@ interp = Interpretation.from_learner(learn)
 
 Medical models are predominantly high impact so it is important to know how good a model is at detecting a certain condition. 
 
-This model has an accuracy of 56%. Accuracy can be defined as the number of correctly predicted data points out of all the data points. However in this context we can define accuracy as the probability that the model is correct and the patient has the condition **PLUS** the probability that the model is correct and the patient does not have the condition
+This model has an accuracy of 96%. Accuracy can be defined as the number of correctly predicted data points out of all the data points. However in this context we can define accuracy as the probability that the model is correct and the patient has the condition **PLUS** the probability that the model is correct and the patient does not have the condition
 
 There are some other key terms that need to be used when evaluating medical models:
 
