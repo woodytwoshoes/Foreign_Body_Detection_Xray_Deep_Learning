@@ -139,7 +139,7 @@ xray_sample.show()
 ```
 
 
-![png](61_Train_medical_imaging_files/61_Train_medical_imaging_14_0.png)
+![png](images/61_Train_medical_imaging_14_0.png)
 
 
 We can also show a chest X-ray with an artificial 'coin' feature inserted in the trachea 
@@ -157,7 +157,7 @@ xray_sample.show()
 ```
 
 
-![png](61_Train_medical_imaging_files/61_Train_medical_imaging_17_0.png)
+![png](images/61_Train_medical_imaging_17_0.png)
 
 
 This can be compared to a real chest X-ray of an actual coin impacted in the trachea (I have not modified the below image at all, and it is not part of my dataset). As you can see, my synthetic data looks a lot like the real thing.
@@ -188,7 +188,7 @@ dls.show_batch(max_n=16)
 ```
 
 
-![png](61_Train_medical_imaging_files/61_Train_medical_imaging_22_0.png)
+![png](images/61_Train_medical_imaging_22_0.png)
 
 
 ## Training
@@ -236,7 +236,7 @@ learn.lr_find()
 
 
 
-![png](61_Train_medical_imaging_files/61_Train_medical_imaging_27_3.png)
+![png](images/61_Train_medical_imaging_27_3.png)
 
 
 
@@ -427,7 +427,7 @@ learn.show_results(max_n=16)
 
 
 
-![png](61_Train_medical_imaging_files/61_Train_medical_imaging_30_2.png)
+![png](images/61_Train_medical_imaging_30_2.png)
 
 
 
@@ -549,7 +549,7 @@ interp.plot_confusion_matrix(figsize=(7,7))
 
 
 
-![png](61_Train_medical_imaging_files/61_Train_medical_imaging_44_4.png)
+![png](images/61_Train_medical_imaging_44_4.png)
 
 
 You can also reproduce the results interpreted from plot_confusion_matrix like so:
@@ -754,7 +754,7 @@ dls.valid_ds[idxs[0]][0]
 
 
 
-![png](61_Train_medical_imaging_files/61_Train_medical_imaging_70_3.png)
+![png](images/61_Train_medical_imaging_70_3.png)
 
 
 
