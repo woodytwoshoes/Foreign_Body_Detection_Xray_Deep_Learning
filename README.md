@@ -1,33 +1,28 @@
-```python
-from fastai.basics import *
-from fastai.callback.all import *
-from fastai.vision.all import *
-from fastai.medical.imaging import *
+# Synthetic Data Creation for the Improvement of the Performance of Classifiers.
 
-import pydicom
+In training a classifier, it is useful to include, in the training dataset, augmented and synthetic data where that extra data improves the performance of the classifier on the validation and test sets.
 
-import pandas as pd
-```
+In this project, I will create synthetic data which can be later used in a radiology project. The synthetic data I will create is of foreign bodies within chest X-rays. I will take a dataset of raw chest X-rays, and, using computer vison techniques, I will insert foreign bodies into them and compare them to real cases. 
+
+I will also train a classifier on this synthetic data. In practice, the model that I trained should be loaded as a pre-trained model for additional training on real data. I hypothesize that my model achieves superior results.
+In my project proposal, I suggested that I would apply those methods to Computer Tomography volumes additionally. Unfortunately, the shortage of GPUs available in cloud services meant that the training on CT volumes became prohibitively time and resource intensive on CPUs. The same goes for the visualization of CT volumes. I have not included the CT volumes in this final report, although I did load and view slices of the dataset from my project proposal (kits19/kits21).
 
 
-```python
-#hide
-from nbdev.showdoc import *
-```
-
-# Project Pilot - Binary classification of chest X-rays for 'swallowed coin'
+## Part I - Binary classification of chest X-rays for 'swallowed coin'
 #### Adapted from fastai tutorial https://docs.fast.ai/tutorial.medical_imaging.html
 
 
-> In this notebook we will build a classifier that distinguishes between chest X-rays with a swallowed coin and chest X-rays without a swallowed coin. The coin in these images is always seen face-on, and has not been rotated. The image data is loaded from a local dataset of modified DICOM source files, which have been derived from a dataset of 250 chest X-rays that are included in the fastai package. DICOM data is handled directly. This notebook also goes through basic data exploration.
 
-## Foreign body impacted in trachea
 
-Sometimes patients will accidentally inhale a foreign body. These can include things like (commonly) coins, nuts, a food bolus, debris, or even their own dentures. Most objects will be lodged in the trachea (windpipe) on the way down. Coins are more common in children than adults. Any foreign body in the airway can be an emergency, as even if it doesn't obstruct, it can cause trauma and bleeding, which may then subsequently result in obstruction.
+> In Part I we will build a classifier that distinguishes between chest X-rays with a swallowed coin and chest X-rays without a swallowed coin. The coin in these images is always seen face-on, and has not been rotated. The image data is loaded from a local dataset of modified DICOM source files, which have been derived from a dataset of 250 chest X-rays that are included in the fastai package. DICOM data is handled directly. This notebook also goes through basic data exploration.
 
-have chosen to make a classifier on swallowed coins as Part I of my project because a coin is a simple shape, and I am using an 'artificial' or 'synthetic' dataset where I am adding in the coins with openCV (see my other notebook 'Create_modified_dataset' to see how I modify the pixels in the DICOM files via numpy).
+## Foreign body impacted in oesophagus
 
-Here is what a coin in the trachea looks like on Chest X-ray (this is a real image, and I have not modified it).
+Sometimes patients will accidentally inhale or swallow a foreign body. These can include things like (commonly) coins, nuts, a food bolus, debris, or even their own dentures. Many  objects will be lodged in the trachea (windpipe) on the way down. Coins are more common in children than adults. Any foreign body in the airway can be an emergency, as even if it doesn't obstruct, it can cause trauma and bleeding, which may then subsequently result in obstruction.
+
+I have chosen to make a classifier on swallowed coins as Part I of my project because a coin is a simple shape, and I am using an 'artificial' or 'synthetic' dataset where I am adding in the coins with openCV (see my other notebook 'Create_modified_dataset' to see how I modify the pixels in the DICOM files via numpy).
+
+Here is what a coin in the oesophagus looks like on Chest X-ray (this is a real image, and I have not modified it). Coins can sometimes look like this if they are in the trachea, but much more often they are viewed side-on not face-on.
 
 ![real coin in trachea](./images/coin_trachea.jpg)
 
@@ -209,26 +204,6 @@ learn.lr_find()
 
 
 
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
-
-
-
-
-
-
-
-
 
 
     SuggestedLRs(valley=0.002511886414140463)
@@ -244,20 +219,6 @@ learn.lr_find()
 learn.fit_one_cycle(10)
 ```
 
-
-
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
 
 
 
@@ -354,21 +315,6 @@ tta = learn.tta(use_max=True)
 
 
 
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
-
-
-
 
 
 <div>
@@ -377,22 +323,6 @@ tta = learn.tta(use_max=True)
 </div>
 
 
-
-
-
-
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
 
 
 
@@ -407,23 +337,6 @@ learn.show_results(max_n=16)
 
 
 
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
-
-
-
-
-
 
 
 
@@ -434,25 +347,6 @@ learn.show_results(max_n=16)
 ```python
 interp = Interpretation.from_learner(learn)
 ```
-
-
-
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
-
-
-
-
 
 
 
@@ -508,45 +402,6 @@ interp.plot_confusion_matrix(figsize=(7,7))
 
 
 
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
-
-
-
-
-
-
-
-
-
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
-
-
-
-
-
-
 
 
 ![png](images/61_Train_medical_imaging_44_4.png)
@@ -561,24 +416,6 @@ tn, fp = upp[0], upp[1]
 fn, tp = low[0], low[1]
 print(tn, fp, fn, tp)
 ```
-
-
-
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
-
-
-
 
 
 
@@ -729,23 +566,6 @@ dls.valid_ds[idxs[0]][0]
 
 
 
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
-
-
-
-
-
 
 
     For the below image the model predicted True that a coin was in the trachea
@@ -760,7 +580,7 @@ dls.valid_ds[idxs[0]][0]
 
 The presence of two ring-like objects on the chest x-ray may have confused the model.
 
-# Part II to be continue elsewhere
+
 ### This notebook showed that I can use a sythetic dataset to train a deep neural network to make classifications. For part II I plan to add the following experimental elements
 
 1. Include more than one foreign body in the dataset. I would perhaps like to include things like knife blades, scalpels, bullets, and shrapnel.
@@ -774,22 +594,13 @@ _**Citations:**_
 \[2\] Tutorial - Binary classification of chest X-rays. https://docs.fast.ai/tutorial.medical_imaging.html
 
 
-```python
 
-```
 
-```python
-from PIL import Image
-import numpy as np
-import cv2 as cv
-import pandas as pd
-import os
-from pathlib import Path
-import boto3
-```
+# Part II
 
-# EDA Part 2.3
-### Modify a single chest x-ray to give it a foreign body. Three different types of foreign bodies added: 1. Coin in trachea 2. Magnets in stomach 3. Bullet in chest.
+## IIA Image Modification
+
+### In this section I show how I can modify a single chest x-ray to give it a foreign body of select type. Three different types of foreign bodies added: 1. Coin in oesophagus 2. Magnets in stomach 3. Bullet in chest.
 
 
 ```python
@@ -816,7 +627,7 @@ df_train.shape
 
 223,414 patients with chest x-rays. A huge dataset.
 
-# Example image from 2.1
+### Example image 
 Here we take a closer look at the example image taken from 2.1. We add a coin in the trachea, before the bifurcation into left and right main bronchus.
 
 
@@ -867,7 +678,7 @@ print(df_train[df_train['Path'].str.contains(str(sample_path_mod))])
 width, height = img.size
 ```
 
-## 1. Circle 'coin' feature modification
+### 1. Circle 'coin' feature modification
 
 Here I have fixed the random generator of x and y values so that it no longer takes from the uniform [0,1] distribution. It now samples from the uniform [-1,1] distribution. I did this because the previous version was inappropriately always placing the coin to the patient's left (our right).
 
@@ -908,7 +719,7 @@ Compared the above to the real coin in trachea image below.
 img.save(save_path)
 ```
 
-## 2. Double circle 'Two magnets stuck together' feature addition
+### 2. Double circle 'Two magnets stuck together' feature addition
 
 
 ```python
@@ -960,9 +771,8 @@ You can compare my artificial feature to a real case seen below. I think they ar
 
 https://radiopaedia.org/cases/ingested-magnets-causing-small-bowel-perforation
 
-## 3. Circle and rectangle 'Bullet' feature addition
-
-### And with rotation!
+### 3. Circle and rectangle 'Bullet' feature addition
+ And with rotation!
 
 
 ```python
@@ -1076,20 +886,10 @@ Case courtesy of Dr Hidayatullah Hamidi, Radiopaedia.org, rID: 59478
 
 ![real bullet in chest](images/bullet_chest.JPEG)
 
-```python
-from fastai.vision.all import *
 
-from PIL import Image
-import numpy as np
-import pandas as pd
-import os
-from pathlib import Path
 
-np.random.seed(0)
-```
-
-# Classification with all three types of foreign body, full dataset training
-## Bullets, magnets, coins, and no modification. 99% accuracy
+## IIB Classification training with all three types of foreign body, full dataset training
+### Bullets, magnets, coins, and no modification. 99% accuracy
 
 ```python
 path = Path('../2.4_Modify_Entire_Dataset/CheXpert-v1.0-small-MOD/')
@@ -1423,18 +1223,6 @@ learn.fit_one_cycle(1)
 
 
 
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
 
 
 
@@ -1465,21 +1253,6 @@ learn.fit_one_cycle(1)
 ```python
 tta = learn.tta(use_max=True)
 ```
-
-
-
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
 
 
 
@@ -1521,23 +1294,6 @@ learn.show_results(max_n=16)
 
 
 
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
-
-
-
-
-
 
 
 
@@ -1548,24 +1304,6 @@ learn.show_results(max_n=16)
 ```python
 interp = Interpretation.from_learner(learn)
 ```
-
-
-
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
-
-
-
 
 
 
@@ -1580,46 +1318,270 @@ interp.plot_confusion_matrix(figsize=(7,7))
 
 
 
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
-
-
-
-
-
-
-
-
-
-<style>
-    /* Turns off some styling */
-    progress {
-        /* gets rid of default border in Firefox and Opera. */
-        border: none;
-        /* Needs to be in here for Safari polyfill so background images work as expected. */
-        background-size: auto;
-    }
-    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
-        background: #F44336;
-    }
-</style>
-
-
-
-
-
 
 
 
 ![png](images/images_17_4.png)
 
+
+
+
+```python
+mat = np.array([[4902,1,0,20],[0,5000,0,7],[0,0,4828,45],[33,4,27,20733]])
+```
+
+
+```python
+sens = np.diag(mat)/mat.sum(axis = 1)
+```
+
+
+```python
+categories = 'bullet coin magnets no_mod'.split(' ')
+```
+
+
+```python
+for category, sensitivity in zip(categories, sens):
+    print(f'sensitivity/recall for class {category} is {sensitivity:.3f}')
+```
+
+    sensitivity/recall for class bullet is 0.996
+    sensitivity/recall for class coin is 0.999
+    sensitivity/recall for class magnets is 0.991
+    sensitivity/recall for class no_mod is 0.997
+
+
+
+```python
+precisions = np.diag(mat)/mat.sum(axis = 0)
+```
+
+
+```python
+for category, precision in zip(categories, precisions):
+    print(f'precision for class {category} is {precision:.3f}')
+```
+
+    precision for class bullet is 0.993
+    precision for class coin is 0.999
+    precision for class magnets is 0.994
+    precision for class no_mod is 0.997
+
+
+
+```python
+cm  = mat
+```
+
+
+```python
+TP = np.diag(cm)
+TP
+```
+
+
+
+
+    array([ 4902,  5000,  4828, 20733])
+
+
+
+
+```python
+FP = np.sum(cm, axis=0) - TP
+FP
+```
+
+
+
+
+    array([33,  5, 27, 72])
+
+
+
+
+```python
+FN = np.sum(cm, axis=1) - TP
+FN
+```
+
+
+
+
+    array([21,  7, 45, 64])
+
+
+
+
+```python
+num_classes = 4
+TN = []
+for i in range(num_classes):
+    temp = np.delete(cm, i, 0)    # delete ith row
+    temp = np.delete(temp, i, 1)  # delete ith column
+    TN.append(sum(sum(temp)))
+TN
+```
+
+
+
+
+    [30644, 30588, 30700, 14731]
+
+
+
+
+```python
+specificities = TN/(TN+FP)
+```
+
+
+```python
+for category, specificity in zip(categories, specificities):
+    print(f'specificity for class {category} is {specificity:.3f}')
+```
+
+    specificity for class bullet is 0.999
+    specificity for class coin is 1.000
+    specificity for class magnets is 0.999
+    specificity for class no_mod is 0.995
+
+## Model performance on real data given pretraining alone
+Testing whether pretraining on synthetic data alone results in a correct prediction 
+
+
+```python
+test_image_path_bullet = 'test_image/bullet_chest.jpg'
+
+test_image_bullet = Image.open(test_image_path_bullet)
+
+test_image_bullet
+```
+
+
+
+![png](images/images_1_0.png)
+
+
+
+
+```python
+learn.predict(test_image_path_bullet)
+```
+
+
+
+    ('no_mod',
+     TensorBase(3),
+     TensorBase([6.1612e-04, 8.4187e-05, 2.0542e-04, 9.9909e-01]))
+
+
+
+This is incorrect prediction. The pretrained model believes that this image of a bullet is actually 'no mod'. This is, funnily enough, correct. This is an unmodified image. However, it is not a good prediction in the spirit of the experiment. It should predict 'bullet'.
+
+
+```python
+test_image_path_coin = 'test_image/coin_trachea.jpg'
+
+test_image_coin = Image.open(test_image_path_coin)
+
+test_image_coin
+```
+
+
+
+
+![png](images/images_4_0.png)
+
+
+
+
+```python
+learn.predict(test_image_path_coin)
+```
+
+
+
+
+    ('bullet', TensorBase(0), TensorBase([0.6143, 0.0010, 0.0014, 0.3833]))
+
+
+
+Another incorrect prediction. To make sure the model was not just predicting bullet due to the arrows, I removed them myself as they represent educational artefacts.
+
+
+```python
+test_image_path_coin = 'test_image/coin_trachea_artefacts_removed.jpg'
+
+test_image_coin = Image.open(test_image_path_coin)
+
+test_image_coin
+```
+
+
+
+
+![png](images/images_7_0.png)
+
+
+
+
+```python
+learn.predict(test_image_path_coin)
+```
+
+
+
+    ('no_mod',
+     TensorBase(3),
+     TensorBase([1.7803e-04, 6.6784e-05, 4.9666e-04, 9.9926e-01]))
+
+
+
+The model is incorrect again. It should predict 'coin'. However, it predicts 'no mod'.
+
+
+```python
+
+test_image_path_magnets = 'test_image/magnets_stomach.jpeg'
+
+test_image_magnets = Image.open(test_image_path_magnets)
+
+test_image_magnets
+```
+
+
+
+
+![png](images/images_10_0.png)
+
+
+
+
+```python
+learn.predict(test_image_path_magnets)
+```
+
+
+
+    ('bullet', TensorBase(0), TensorBase([0.6762, 0.0010, 0.0010, 0.3217]))
+
+
+
+Remarkably, the model is now predicting bullet. The model is wrong again, in a different way.
+
+## Conclusion
+
+The model achieved high internal validity on its synthetic dataset. Sensitivity and specificity are approximately 99%. This speaks to the power of the underlying training, much of which is automated by the fastai package.
+It has failed to achieve good predictions on real data. This indicates that my synthetic data is not similar to the real data in such a way that the model's high performance on the training dataset has external validity.
+
+What we have not tested is whether the pretraining of the model on synthetic data increased performance of the same model then trained on a dataset of real data. Given more time, I would have liked to assemble a dataset of 300 Xrays of real foreign bodies (coins, bullets, magnets etc) and demonstrated the final performance of a model trained on:
+
+1) Synthetic data alone
+2) Real data alone
+3) Synthetic data then real data.
+
+If the performance of model trained by method 3) superseded the performance of models trained by method 1) and 2), then my hypothesis that synthetic data improves model performance would be validated. 
+
+As it stands now, I will wait until GPU resources are available, and then create synthetic CT volumes with stones, pre-train on them, with the intention of using that pre-trained model on the real CT volume data I have labelled within my hospital.

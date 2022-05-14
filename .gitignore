@@ -3,5 +3,5 @@ mod_dataset/
 .ipynb_checkpoints
 CheXpert-v1.0-small-MOD/
 CheXpert-v1.0-small/
-
+kits21/
 
