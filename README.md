@@ -499,7 +499,7 @@ This model performed perfectly at predicting patients with no coin in the trache
 
 **Calculating Accuracy**
 
-The accuracy of this model as mentioned before was 56% but how was this calculated? We can consider accuracy as:
+The accuracy of this model as mentioned before was 96% but how was this calculated? We can consider accuracy as:
 
 **accuracy = sensitivity x prevalence + specificity * (1 - prevalence)**
 
